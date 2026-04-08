@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>April Sales Contest — Runwise</title>
+  <style>
+    :root {
+      --navy:   #0A1628;
+      --navy2:  #0F1E35;
+      --navy3:  #152540;
+      --border: rgba(255,255,255,0.07);
+      --border2:rgba(255,255,255,0.12);
+      --gold:   #C9A84C;
+      --gold2:  #E8C97A;
+      --blue:   #3A7BD5;
+      --green:  #2E9B6A;
+      --text1:  #FFFFFF;
+      --text2:  rgba(255,255,255,0.75);
+      --text3:  rgba(255,255,255,0.45);
+      --text4:  rgba(255,255,255,0.22);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: var(--navy);
+      color: var(--text1);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--navy2);
+      border-bottom: 1px solid var(--border2);
+      padding: 28px 48px 24px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+    .header-left .eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .header-left h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text1);
+      letter-spacing: -0.3px;
+    }
+    .header-left h1 span { color: var(--text3); font-weight: 400; }
+    .header-right { text-align: right; }
+    .header-right .company { font-size: 13px; font-weight: 600; color: var(--text3); margin-top: 3px; letter-spacing: 0.5px; }
+    .header-right .updated { font-size: 11px; color: var(--text4); letter-spacing: 0.3px; }
+
+    /* ── PRIZE BANNER ── */
+    .prize-banner {
+      background: linear-gradient(135deg, #1A2E4A 0%, #1E3355 100%);
+      border-bottom: 1px solid var(--border2);
+      border-top: 1px solid rgba(201,168,76,0.2);
+      padding: 16px 48px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .prize-icon {
+      width: 32px; height: 32px;
+      background: rgba(201,168,76,0.15);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .prize-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
+    .prize-text strong { color: var(--gold2); font-weight: 600; }
+
+    /* ── CONTENT ── */
+    .content { max-width: 1300px; margin: 0 auto; padding: 32px 48px 64px; }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text4);
+      margin-bottom: 10px;
+      padding-left: 1px;
+    }
+
+    /* ── TOP ROW: Baseball Standings + Top 5 ── */
+    .top-row {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+      margin-bottom: 28px;
+      align-items: start;
+    }
+
+    /* ── BASEBALL STANDINGS ── */
+    .baseball-wrap {
+      background: var(--navy2);
+      border: 1px solid var(--border);
+    }
+    .panel-header {
+      padding: 13px 20px;
+      border-bottom: 1px solid var(--border);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text3);
+    }
+    .baseball-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .baseball-table thead tr {
+      border-bottom: 1px solid var(--border);
+    }
+    .baseball-table thead th {
+      padding: 9px 16px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text4);
+      text-align: left;
+    }
+    .baseball-table thead th.right { text-align: right; }
+    .baseball-table tbody tr {
+      border-bottom: 1px solid var(--border);
+    }
+    .baseball-table tbody tr:last-child { border-bottom: none; }
+    .baseball-table tbody tr.leader { background: rgba(201,168,76,0.04); }
+    .baseball-table td {
+      padding: 13px 16px;
+      vertical-align: middle;
+    }
+    .baseball-table td.right { text-align: right; }
+
+    .place-col { width: 100px; }
+    .place-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .place-badge .ordinal {
+      font-size: 11px;
+      font-weight: 700;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .place-badge .ordinal.p1 { background: rgba(201,168,76,0.2); color: var(--gold); border: 1px solid rgba(201,168,76,0.4); }
+    .place-badge .ordinal.p2 { background: rgba(160,160,160,0.1); color: #BBBBC0; border: 1px solid rgba(160,160,160,0.25); }
+    .place-badge .ordinal.p3 { background: rgba(160,116,80,0.12); color: #C0956A; border: 1px solid rgba(160,116,80,0.3); }
+    .place-badge .ordinal.pn { background: transparent; color: var(--text4); border: 1px solid var(--border); }
+    .place-badge .place-label { font-size: 11px; color: var(--text3); font-weight: 500; }
+
+    .team-name-col { font-size: 14px; font-weight: 600; color: var(--text1); white-space: nowrap; }
+    .team-name-col .member-count { font-size: 11px; color: var(--text4); margin-top: 2px; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 240px; }
+
+    .deals-col { font-size: 13px; color: var(--text3); text-align: center; }
+
+    .bar-col { width: 180px; }
+    .bar-bg { background: rgba(255,255,255,0.06); border-radius: 2px; height: 6px; overflow: hidden; }
+    .bar-fill { height: 6px; border-radius: 2px; background: linear-gradient(90deg, #1A5CA8, #4A9BD5); }
+    .bar-fill.gold { background: linear-gradient(90deg, #A07820, var(--gold)); }
+
+    .total-col { font-size: 15px; font-weight: 700; color: var(--text1); text-align: right; white-space: nowrap; }
+    .total-col.zero { color: var(--text4); font-weight: 400; font-size: 13px; }
+
+    .gb-col { font-size: 12px; color: var(--text4); text-align: right; white-space: nowrap; min-width: 100px; }
+    .gb-col.leader-gb { color: var(--gold2); font-weight: 600; font-size: 11px; letter-spacing: 0.5px; }
+
+    /* ── TOP 5 ── */
+    .top5-wrap {
+      background: var(--navy2);
+      border: 1px solid var(--border);
+    }
+    .standings-row {
+      display: flex;
+      align-items: center;
+      padding: 12px 18px;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .standings-row:last-child { border-bottom: none; }
+    .s-rank { font-size: 13px; font-weight: 700; width: 16px; text-align: center; flex-shrink: 0; }
+    .s-rank.r1 { color: var(--gold); }
+    .s-rank.r2 { color: #A0A0A0; }
+    .s-rank.r3 { color: #A07450; }
+    .s-rank.rn { color: var(--text4); }
+    .s-info { flex: 1; }
+    .s-name { font-size: 13px; font-weight: 600; color: var(--text1); }
+    .s-team { font-size: 11px; color: var(--text4); margin-top: 1px; }
+    .s-recent { font-size: 11px; color: var(--text4); text-align: right; white-space: nowrap; line-height: 1.6; }
+    .s-recent .val { color: var(--green); font-weight: 600; display: block; }
+    .s-recent .val.zero { color: var(--text4); font-weight: 400; }
+    .s-arr { font-size: 14px; font-weight: 700; color: var(--text1); text-align: right; min-width: 68px; white-space: nowrap; }
+    .s-arr.zero { color: var(--text4); font-weight: 400; }
+
+    /* ── TEAM CARDS ── */
+    .teams-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 28px;
+      align-items: start;
+    }
+    .team-card {
+      background: var(--navy2);
+      border: 1px solid var(--border);
+    }
+    .team-card-header {
+      padding: 15px 18px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .tc-name { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); margin-bottom: 4px; }
+    .tc-total { font-size: 22px; font-weight: 700; color: var(--text1); }
+    .tc-total.zero { color: var(--text4); font-size: 18px; }
+    .tc-rank { font-size: 11px; font-weight: 700; color: var(--text4); }
+    .tc-rank.r1 { color: var(--gold); }
+    .tc-rank.r2 { color: #A0A0A0; }
+    .tc-rank.r3 { color: #A07450; }
+
+    .tc-bar-wrap { padding: 10px 18px 6px; }
+    .tc-bar-bg { background: rgba(255,255,255,0.06); border-radius: 2px; height: 4px; overflow: hidden; }
+    .tc-bar-fill { height: 4px; border-radius: 2px; background: linear-gradient(90deg, #1A5CA8, #4A9BD5); }
+    .tc-bar-fill.gold { background: linear-gradient(90deg, #A07820, var(--gold)); }
+
+    .tc-members { padding: 4px 0 8px; }
+    .tc-member {
+      display: flex;
+      align-items: center;
+      padding: 7px 18px;
+      gap: 10px;
+    }
+    .tc-member:hover { background: rgba(255,255,255,0.02); }
+    .avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: #FFF;
+      flex-shrink: 0;
+      letter-spacing: 0.3px;
+    }
+    .m-info { flex: 1; }
+    .m-name { font-size: 12px; font-weight: 500; color: var(--text2); }
+    .m-name.active { color: var(--text1); font-weight: 600; }
+    .m-sub { font-size: 10px; color: var(--text4); margin-top: 1px; }
+    .m-arr { font-size: 13px; font-weight: 700; color: var(--green); }
+    .m-arr.zero { color: var(--text4); font-weight: 400; }
+
+    /* ── FULL LEADERBOARD ── */
+    .lb-wrap {
+      background: var(--navy2);
+      border: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+    .lb-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .lb-table thead tr { border-bottom: 1px solid var(--border2); }
+    .lb-table thead th {
+      padding: 11px 16px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text4);
+    }
+    .lb-table thead th.right { text-align: right; }
+    .lb-table tbody tr { border-bottom: 1px solid var(--border); }
+    .lb-table tbody tr:last-child { border-bottom: none; }
+    .lb-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+    .lb-table td { padding: 11px 16px; color: var(--text2); }
+    .lb-table td.right { text-align: right; }
+    .lb-table td.rank-cell { font-size: 12px; font-weight: 700; width: 44px; text-align: center; }
+    .lb-table td.rank-cell.r1 { color: var(--gold); }
+    .lb-table td.rank-cell.r2 { color: #A0A0A0; }
+    .lb-table td.rank-cell.r3 { color: #A07450; }
+    .lb-table td.rank-cell.rn { color: var(--text4); }
+    .lb-table td.name-cell { font-weight: 600; color: var(--text1); }
+    .lb-table td.dim-name { color: var(--text3); }
+    .lb-table td.team-lbl { color: var(--text3); font-size: 12px; }
+    .lb-table td.arr-cell { font-weight: 700; color: var(--text1); text-align: right; }
+    .lb-table td.arr-zero { color: var(--text4); text-align: right; }
+    .lb-table td.recent-cell { text-align: right; font-weight: 600; color: var(--green); }
+    .lb-table td.recent-zero { text-align: right; color: var(--text4); }
+
+    /* ── DEALS TABLE ── */
+    .deals-wrap { background: var(--navy2); border: 1px solid var(--border); }
+    .deals-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .deals-table thead tr { border-bottom: 1px solid var(--border2); }
+    .deals-table thead th {
+      padding: 11px 16px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text4);
+    }
+    .deals-table thead th.right { text-align: right; }
+    .deals-table tbody tr { border-bottom: 1px solid var(--border); }
+    .deals-table tbody tr:last-child { border-bottom: none; }
+    .deals-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+    .deals-table td { padding: 11px 16px; color: var(--text2); }
+    .deals-table td.right { text-align: right; }
+    .deals-table td.rep-cell { font-weight: 600; color: var(--text1); }
+    .deals-table td.arr-cell { font-weight: 700; color: var(--text1); text-align: right; }
+    .deals-table td.dim { color: var(--text4); }
+    .booked-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 2px;
+      background: rgba(46,155,106,0.15);
+      color: #4EB888;
+      border: 1px solid rgba(46,155,106,0.25);
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      margin-top: 40px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text4);
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="eyebrow">April 2026</div>
+      <h1>Sales Contest <span>/ Q2-2026</span></h1>
+    </div>
+    <div class="header-right">
+      <div class="company">Runwise</div>
+      <div class="updated">Last updated April 8, 2026</div>
+    </div>
+  </div>
+
+  <!-- PRIZE BANNER -->
+  <div class="prize-banner">
+    <div class="prize-icon">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L10 5.5H15L11 8.5L12.5 13L8 10.5L3.5 13L5 8.5L1 5.5H6L8 1Z" fill="#C9A84C" opacity="0.9"/></svg>
+    </div>
+    <div class="prize-text">
+      <strong>Prize:</strong> The winning team — including all associated Account Managers and BDRs — will be treated to a <strong>lavish lunch covered by Runwise</strong> on a Friday afternoon of their choosing.
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- TOP ROW: Baseball Standings + Top 5 -->
+    <div class="top-row">
+
+      <!-- Baseball Standings -->
+      <div class="baseball-wrap">
+        <div class="panel-header">Team Standings</div>
+        <table class="baseball-table">
+          <thead>
+            <tr>
+              <th class="place-col">Place</th>
+              <th>Team</th>
+              <th class="bar-col"></th>
+              <th class="right">Total Sold</th>
+              <th class="right">Behind</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="leader">
+              <td>
+                <div class="place-badge">
+                  <div class="ordinal p1">1st</div>
+                </div>
+              </td>
+              <td>
+                <div class="team-name-col">Key Account 1</div>
+                <div class="team-name-col member-count">Mike Cook, Nathan Tobin</div>
+              </td>
+
+              <td class="bar-col"><div class="bar-bg"><div class="bar-fill gold" style="width:100%"></div></div></td>
+              <td class="total-col">$16,550</td>
+              <td class="gb-col leader-gb">LEADER</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="place-badge">
+                  <div class="ordinal p2">2nd</div>
+                </div>
+              </td>
+              <td>
+                <div class="team-name-col">Territory Team</div>
+                <div class="team-name-col member-count">McNicholas, Marrazzo, Jha, Grogan, Butler, Napoli</div>
+              </td>
+
+              <td class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:26%"></div></div></td>
+              <td class="total-col">$4,300</td>
+              <td class="gb-col">$12,250 back</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="place-badge">
+                  <div class="ordinal p3">3rd</div>
+                </div>
+              </td>
+              <td>
+                <div class="team-name-col">Key Account 2</div>
+                <div class="team-name-col member-count">Sarah Bauer, Kevin Washam</div>
+              </td>
+
+              <td class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:0%"></div></div></td>
+              <td class="total-col zero">—</td>
+              <td class="gb-col">$16,550 back</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="place-badge">
+                  <div class="ordinal pn">T-3</div>
+                </div>
+              </td>
+              <td>
+                <div class="team-name-col">Outbound AEs</div>
+                <div class="team-name-col member-count">Lombardo, Frye, Dimaso, DiLungo</div>
+              </td>
+
+              <td class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:0%"></div></div></td>
+              <td class="total-col zero">—</td>
+              <td class="gb-col">$16,550 back</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="place-badge">
+                  <div class="ordinal pn">T-3</div>
+                </div>
+              </td>
+              <td>
+                <div class="team-name-col">Partnerships</div>
+                <div class="team-name-col member-count">Abrams, Warshay, Beeseley</div>
+              </td>
+
+              <td class="bar-col"><div class="bar-bg"><div class="bar-fill" style="width:0%"></div></div></td>
+              <td class="total-col zero">—</td>
+              <td class="gb-col">$16,550 back</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Top 5 Individuals -->
+      <div class="top5-wrap">
+        <div class="panel-header">Top 5 &nbsp;—&nbsp; Individuals</div>
+        <div class="standings-row">
+          <div class="s-rank r1">1</div>
+          <div class="s-info">
+            <div class="s-name">Mike Cook</div>
+            <div class="s-team">Key Account 1</div>
+          </div>
+          <div class="s-recent">Last 3 days<span class="val">+$1,350</span></div>
+          <div class="s-arr">$16,550</div>
+        </div>
+        <div class="standings-row">
+          <div class="s-rank r2">2</div>
+          <div class="s-info">
+            <div class="s-name">Sam Marrazzo</div>
+            <div class="s-team">Territory Team</div>
+          </div>
+          <div class="s-recent">Last 3 days<span class="val">+$2,800</span></div>
+          <div class="s-arr">$2,800</div>
+        </div>
+        <div class="standings-row">
+          <div class="s-rank r3">3</div>
+          <div class="s-info">
+            <div class="s-name">C. McNicholas</div>
+            <div class="s-team">Territory Team</div>
+          </div>
+          <div class="s-recent">Last 3 days<span class="val">+$1,500</span></div>
+          <div class="s-arr">$1,500</div>
+        </div>
+        <div class="standings-row">
+          <div class="s-rank rn">4</div>
+          <div class="s-info">
+            <div class="s-name">Nathan Tobin</div>
+            <div class="s-team">Key Account 1</div>
+          </div>
+          <div class="s-recent">Last 3 days<span class="val zero">—</span></div>
+          <div class="s-arr zero">—</div>
+        </div>
+        <div class="standings-row">
+          <div class="s-rank rn">5</div>
+          <div class="s-info">
+            <div class="s-name">Sarah Bauer</div>
+            <div class="s-team">Key Account 2</div>
+          </div>
+          <div class="s-recent">Last 3 days<span class="val zero">—</span></div>
+          <div class="s-arr zero">—</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TEAM CARDS -->
+    <div class="section-label">Team Breakdown</div>
+    <div class="teams-grid">
+
+      <!-- Key Account 1 -->
+      <div class="team-card">
+        <div class="team-card-header">
+          <div>
+            <div class="tc-name">Key Account 1</div>
+            <div class="tc-total">$16,550</div>
+          </div>
+          <div class="tc-rank r1">1st Place</div>
+        </div>
+        <div class="tc-bar-wrap">
+          <div class="tc-bar-bg"><div class="tc-bar-fill gold" style="width:100%"></div></div>
+        </div>
+        <div class="tc-members">
+          <div class="tc-member">
+            <div class="avatar" style="background:#1A5CA8">MC</div>
+            <div class="m-info">
+              <div class="m-name active">Mike Cook</div>
+              <div class="m-sub">2 deals booked</div>
+            </div>
+            <div class="m-arr">$16,550</div>
+          </div>
+          <div class="tc-member">
+            <div class="avatar" style="background:#1E2D42">NT</div>
+            <div class="m-info">
+              <div class="m-name">Nathan Tobin</div>
+              <div class="m-sub">—</div>
+            </div>
+            <div class="m-arr zero">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Territory Team -->
+      <div class="team-card">
+        <div class="team-card-header">
+          <div>
+            <div class="tc-name">Territory Team</div>
+            <div class="tc-total">$4,300</div>
+          </div>
+          <div class="tc-rank r2">2nd Place</div>
+        </div>
+        <div class="tc-bar-wrap">
+          <div class="tc-bar-bg"><div class="tc-bar-fill" style="width:26%"></div></div>
+        </div>
+        <div class="tc-members">
+          <div class="tc-member">
+            <div class="avatar" style="background:#1A5CA8">SM</div>
+            <div class="m-info">
+              <div class="m-name active">Sam Marrazzo</div>
+              <div class="m-sub">1 deal booked</div>
+            </div>
+            <div class="m-arr">$2,800</div>
+          </div>
+          <div class="tc-member">
+            <div class="avatar" style="background:#1A5CA8">CM</div>
+            <div class="m-info">
+              <div class="m-name active">C. McNicholas</div>
+              <div class="m-sub">1 deal booked</div>
+            </div>
+            <div class="m-arr">$1,500</div>
+          </div>
+          <div class="tc-member">
+            <div class="avatar" style="background:#1E2D42">KJ</div>
+            <div class="m-info"><div class="m-name">Kieran Jha</div><div class="m-sub">—</div></div>
+            <div class="m-arr zero">—</div>
+          </div>
+          <div class="tc-member">
+            <div class="avatar" style="background:#1E2D42">JG</div>
+            <div class="m-info"><div class="m-name">Johnny Grogan</div><div class="m-sub">—</div></div>
+            <div class="m-arr zero">—</div>
+          </div>
+          <div class="tc-member">
+            <div class="avatar" style="background:#1E2D42">MB</div>
+            <div class="m-info"><div class="m-name">Matt Butler</div><div class="m-sub">—</div></div>
+            <div class="m-arr zero">—</div>
+          </div>
+          <div class="tc-member">
+            <div class="avatar" style="background:#1E2D42">AN</div>
+            <div class="m-info"><div class="m-name">Andrew Napoli</div><div class="m-sub">—</div></div>
+            <div class="m-arr zero">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key Account 2 -->
+      <div class="team-card">
+        <div class="team-card-header">
+          <div>
+            <div class="tc-name">Key Account 2</div>
+            <div class="tc-total zero">—</div>
+          </div>
+          <div class="tc-rank r3">3rd Place</div>
+        </div>
+        <div class="tc-bar-wrap">
+          <div class="tc-bar-bg"><div class="tc-bar-fill" style="width:0%"></div></div>
+        </div>
+        <div class="tc-members">
+          <div class="tc-member">
+            <div class="avatar" style="background:#1E2D42">SB</div>
+            <div class="m-info"><div class="m-name">Sarah Bauer</div><div class="m-sub">—</div></div>
+            <div class="m-arr zero">—</div>
+          </div>
+          <div class="tc-member">
+            <div class="avatar" style="background:#1E2D42">KW</div>
+            <div class="m-info"><div class="m-name">Kevin Washam</div><div class="m-sub">—</div></div>
+            <div class="m-arr zero">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Outbound AEs -->
+      <div class="team-card">
+        <div class="team-card-header">
+          <div>
+            <div class="tc-name">Outbound AEs</div>
+            <div class="tc-total zero">—</div>
+          </div>
+          <div class="tc-rank">T-3rd Place</div>
+        </div>
+        <div class="tc-bar-wrap">
+          <div class="tc-bar-bg"><div class="tc-bar-fill" style="width:0%"></div></div>
+        </div>
+        <div class="tc-members">
+          <div class="tc-member">
+            <div class="avatar" style="background:#1E2D42">EL</div>
+            <div class="m-info"><div class="m-name">Ella Lombardo</div><div class="m-sub">—</div></div>
+            <div class="m-arr zero">—</div>
+          </div>
+          <div class="tc-member">
+            <div class="avatar" style="background:#1E2D42">JF</div>
+            <div class="m-info"><div class="m-name">Jocelyn Frye</div><div class="m-sub">—</div></div>
+            <div class="m-arr zero">—</div>
+          </div>
+          <div class="tc-member">
+            <div class="avatar" style="background:#1E2D42">DD</div>
+            <div class="m-info"><div class="m-name">Danny Dimaso</div><div class="m-sub">—</div></div>
+            <div class="m-arr zero">—</div>
+          </div>
+          <div class="tc-member">
+            <div class="avatar" style="background:#1E2D42">MD</div>
+            <div class="m-info"><div class="m-name">Michelle DiLungo</div><div class="m-sub">—</div></div>
+            <div class="m-arr zero">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Partnerships -->
+      <div class="team-card">
+        <div class="team-card-header">
+          <div>
+            <div class="tc-name">Partnerships</div>
+            <div class="tc-total zero">—</div>
+          </div>
+          <div class="tc-rank">T-3rd Place</div>
+        </div>
+        <div class="tc-bar-wrap">
+          <div class="tc-bar-bg"><div class="tc-bar-fill" style="width:0%"></div></div>
+        </div>
+        <div class="tc-members">
+          <div class="tc-member">
+            <div class="avatar" style="background:#1E2D42">CA</div>
+            <div class="m-info"><div class="m-name">Corey Abrams</div><div class="m-sub">—</div></div>
+            <div class="m-arr zero">—</div>
+          </div>
+          <div class="tc-member">
+            <div class="avatar" style="background:#1E2D42">MW</div>
+            <div class="m-info"><div class="m-name">Matthew Warshay</div><div class="m-sub">—</div></div>
+            <div class="m-arr zero">—</div>
+          </div>
+          <div class="tc-member">
+            <div class="avatar" style="background:#1E2D42">PB</div>
+            <div class="m-info"><div class="m-name">Patrick Beeseley</div><div class="m-sub">—</div></div>
+            <div class="m-arr zero">—</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FULL LEADERBOARD -->
+    <div class="section-label">Full Individual Leaderboard</div>
+    <div class="lb-wrap">
+      <table class="lb-table">
+        <thead>
+          <tr>
+            <th style="width:44px; text-align:center">#</th>
+            <th>Representative</th>
+            <th>Team</th>
+            <th class="right">Last 3 Days</th>
+            <th class="right">Total Sold</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="rank-cell r1">1</td>
+            <td class="name-cell">Mike Cook</td>
+            <td class="team-lbl">Key Account 1</td>
+            <td class="recent-cell">+$1,350</td>
+            <td class="arr-cell">$16,550</td>
+          </tr>
+          <tr>
+            <td class="rank-cell r2">2</td>
+            <td class="name-cell">Sam Marrazzo</td>
+            <td class="team-lbl">Territory Team</td>
+            <td class="recent-cell">+$2,800</td>
+            <td class="arr-cell">$2,800</td>
+          </tr>
+          <tr>
+            <td class="rank-cell r3">3</td>
+            <td class="name-cell">Christopher McNicholas</td>
+            <td class="team-lbl">Territory Team</td>
+            <td class="recent-cell">+$1,500</td>
+            <td class="arr-cell">$1,500</td>
+          </tr>
+          <tr><td class="rank-cell rn">—</td><td class="name-cell dim-name">Nathan Tobin</td><td class="team-lbl">Key Account 1</td><td class="recent-zero">—</td><td class="arr-zero">—</td></tr>
+          <tr><td class="rank-cell rn">—</td><td class="name-cell dim-name">Sarah Bauer</td><td class="team-lbl">Key Account 2</td><td class="recent-zero">—</td><td class="arr-zero">—</td></tr>
+          <tr><td class="rank-cell rn">—</td><td class="name-cell dim-name">Kevin Washam</td><td class="team-lbl">Key Account 2</td><td class="recent-zero">—</td><td class="arr-zero">—</td></tr>
+          <tr><td class="rank-cell rn">—</td><td class="name-cell dim-name">Ella Lombardo</td><td class="team-lbl">Outbound AEs</td><td class="recent-zero">—</td><td class="arr-zero">—</td></tr>
+          <tr><td class="rank-cell rn">—</td><td class="name-cell dim-name">Jocelyn Frye</td><td class="team-lbl">Outbound AEs</td><td class="recent-zero">—</td><td class="arr-zero">—</td></tr>
+          <tr><td class="rank-cell rn">—</td><td class="name-cell dim-name">Danny Dimaso</td><td class="team-lbl">Outbound AEs</td><td class="recent-zero">—</td><td class="arr-zero">—</td></tr>
+          <tr><td class="rank-cell rn">—</td><td class="name-cell dim-name">Michelle DiLungo</td><td class="team-lbl">Outbound AEs</td><td class="recent-zero">—</td><td class="arr-zero">—</td></tr>
+          <tr><td class="rank-cell rn">—</td><td class="name-cell dim-name">Kieran Jha</td><td class="team-lbl">Territory Team</td><td class="recent-zero">—</td><td class="arr-zero">—</td></tr>
+          <tr><td class="rank-cell rn">—</td><td class="name-cell dim-name">Johnny Grogan</td><td class="team-lbl">Territory Team</td><td class="recent-zero">—</td><td class="arr-zero">—</td></tr>
+          <tr><td class="rank-cell rn">—</td><td class="name-cell dim-name">Matt Butler</td><td class="team-lbl">Territory Team</td><td class="recent-zero">—</td><td class="arr-zero">—</td></tr>
+          <tr><td class="rank-cell rn">—</td><td class="name-cell dim-name">Andrew Napoli</td><td class="team-lbl">Territory Team</td><td class="recent-zero">—</td><td class="arr-zero">—</td></tr>
+          <tr><td class="rank-cell rn">—</td><td class="name-cell dim-name">Corey Abrams</td><td class="team-lbl">Partnerships</td><td class="recent-zero">—</td><td class="arr-zero">—</td></tr>
+          <tr><td class="rank-cell rn">—</td><td class="name-cell dim-name">Matthew Warshay</td><td class="team-lbl">Partnerships</td><td class="recent-zero">—</td><td class="arr-zero">—</td></tr>
+          <tr><td class="rank-cell rn">—</td><td class="name-cell dim-name">Patrick Beeseley</td><td class="team-lbl">Partnerships</td><td class="recent-zero">—</td><td class="arr-zero">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- DEAL DETAILS -->
+    <div class="section-label">Deal Details</div>
+    <div class="deals-wrap">
+      <table class="deals-table">
+        <thead>
+          <tr>
+            <th>Representative</th>
+            <th>Account</th>
+            <th>Opportunity</th>
+            <th>Status</th>
+            <th class="right">Close Date</th>
+            <th class="right">TCV</th>
+            <th class="right">Inc. ARR</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="rep-cell">Mike Cook</td>
+            <td>Hilton Worldwide Holdings</td>
+            <td>Logan Airport Hilton</td>
+            <td><span class="booked-tag">Booked</span></td>
+            <td class="right dim">4/10/2026</td>
+            <td class="right dim">$15,200</td>
+            <td class="arr-cell">$15,200</td>
+          </tr>
+          <tr>
+            <td class="rep-cell">Sam Marrazzo</td>
+            <td>NA Photon</td>
+            <td>5503-5527 Toilet Upsell Revisit</td>
+            <td><span class="booked-tag">Booked</span></td>
+            <td class="right dim">4/6/2026</td>
+            <td class="right dim">$13,600</td>
+            <td class="arr-cell">$2,800</td>
+          </tr>
+          <tr>
+            <td class="rep-cell">Christopher McNicholas</td>
+            <td>ICM Properties</td>
+            <td>4715 Leavitt — ICM</td>
+            <td><span class="booked-tag">Booked</span></td>
+            <td class="right dim">4/7/2026</td>
+            <td class="right dim">$5,500</td>
+            <td class="arr-cell">$1,500</td>
+          </tr>
+          <tr>
+            <td class="rep-cell">Mike Cook</td>
+            <td>LaSalle Investment Management</td>
+            <td>601 Amsterdam Ave — Toilet Leak Detection Pilot</td>
+            <td><span class="booked-tag">Booked</span></td>
+            <td class="right dim">4/7/2026</td>
+            <td class="right dim">$7,600</td>
+            <td class="arr-cell">$1,350</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer">
+      <span>Runwise Sales — April 2026 Contest</span>
+      <span>Source: Salesforce &nbsp;·&nbsp; Last 3 days: Apr 6–8, 2026</span>
+    </div>
+
+  </div>
+</body>
+</html>
